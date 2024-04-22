@@ -30,7 +30,8 @@ void loadMap(const char *filename) {
 }
 
 
-void drawMap(){
+void drawMap(Camera2D camera){
+    BeginMode2D(camera);
     for (int row = 0; row < MAX_ROWS; row++) {
             for (int col = 0; col < MAX_COLS; col++) {
                 // Adjust the size and position based on your needs
@@ -82,6 +83,7 @@ void drawMap(){
                 // You can also add additional logic for player, enemies, etc.
             }
         }
+        EndMode2D();
 }
 void clickOnTile(Player *player, Hoe *hoe, WaterCan *waterCan){
     

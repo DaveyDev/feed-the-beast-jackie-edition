@@ -242,8 +242,8 @@ void updateCameraCenter(Camera2D *camera, Player *player, float delta, int width
     camera->offset.y = height / (2.0f * camera->zoom);
 
     // Calculate the camera's position relative to the target
-    camera->target.x = player->position.x + 32;
-    camera->target.y = player->position.y + 32;
+    camera->target.x = player->position.x;
+    camera->target.y = player->position.y;
 }
 
 
