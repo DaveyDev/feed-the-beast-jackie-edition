@@ -1,10 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <raylib.h>
-#include <raymath.h>
-
-#include "src/scripts/constrants.h"
-
 #include "src/scripts/player.c"
 #include "src/scripts/hoe.c"
 #include "src/scripts/checkCollision.c"
@@ -15,39 +11,55 @@
 #include "src/scripts/map.c"
 #include "src/scripts/plant.c"
 #include "src/scripts/shop.c"
-//#include "src/scripts/cameraFollow.c"
 
 
+    void saveMap(const char *filename) {
+    
 
-//Vector2 target = { 0 };
 
+    FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Error: Could not open file.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int row = 0; row < MAX_ROWS; row++) {
+        for (int col = 0; col < MAX_COLS; col++) {
+            fprintf(file, "%d ", 0);
+        }
+        fprintf(file, "\n");
+    }
+
+    fclose(file);
+    
+    }
 
 int main() {
+    
+
+
     // Load the map from the text file
-    loadMap("src/map.txt");
+    saveMap("src/map.txt");
+    
+    
+    const int screenWidth = 832;
+    const int screenHeight = 640;
+    InitWindow(screenWidth, screenHeight, "Feed the Beast: Jackie Edition MAP EDITOR");
+    
+    /*)
     int scene = 0;
     //int numSeeds = 0;
     
     int coins = 0;
     
     // Raylib Initialization
-    const int screenWidth = 832;
-    const int screenHeight = 640;
-    InitWindow(screenWidth, screenHeight, "Feed the Beast: Jackie Edition");
+
     
     loadTextures();
     
     
     Player player;
-    initPlayer(&player, screenWidth, screenHeight - 100, 213.7f); // Initial position and speed
-    
-    //Vector2 cameraPosition = updateCameraFollow();
-        
-    Camera2D camera = { 0 };
-    camera.target = player.position;
-    camera.offset = (Vector2){ screenWidth/2.0f, screenHeight/2.0f };
-    camera.rotation = 0.0f;
-    camera.zoom = 0.5f;
+    initPlayer(&player, screenWidth, screenHeight, 213.7f); // Initial position and speed
     
     Hoe hoe;
     spawnHoe(&hoe, (Vector2){200, 300});
@@ -72,24 +84,16 @@ int main() {
     
     
 
-
+*/
 
     SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
         
-   
-
-
+ /*
         if(scene == 0){
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        
-        //ameraUpdaters[cameraOption](&camera, &player, envItems, envItemsLength, deltaTime, screenWidth, screenHeight);
-        
-
-        
-         // Set the camera position
         drawMap();
         scene = menuScene();
 
@@ -97,18 +101,6 @@ int main() {
         }
         
         if(scene != 0){
-            
-            
-            float deltaTime = GetFrameTime();
-            updatePlayer(&player, deltaTime, map);
-            camera.zoom += ((float)GetMouseWheelMove()*0.05f);
-           
-            updateCameraCenter(&camera, &player, deltaTime,screenWidth, screenHeight);
-            
-            camera.target.x = player.position.x; // Update the camera's target to follow the player
-
-            BeginMode2D(camera);
-            
         if (checkCollision(player.collider, hoe.collider) && IsKeyDown(KEY_E) && player.isHandEmpty) {
             
             hoe.isActive = false;
@@ -152,14 +144,13 @@ int main() {
           
         clickOnTile(&player, &hoe, &waterCan);
         }
-        
+        */
         BeginDrawing();
         ClearBackground(RAYWHITE);
-
+/*
         // Draw the map
         updateMap(&coffeeSeedManager);
         drawMap();
-        
        
    
         DrawTexture(emptyHand, 0, 0, WHITE);
@@ -195,54 +186,30 @@ int main() {
         interactWithCoffeeSeeds(&player, &coffeeSeedManager);
         
         
-        EndMode2D();
-        //float deltaTime = GetFrameTime();
         
-        
-        //target = player.position;
-        //cameraPosition = updateCameraFollow();
-
-      
+        float deltaTime = GetFrameTime();
+        updatePlayer(&player, deltaTime);
         drawPlayer(&player);
-        
-        DrawLine((int)camera.target.x, -screenHeight*10, (int)camera.target.x, screenHeight*10, GREEN);
-        DrawLine(-screenWidth*10, (int)camera.target.y, screenWidth*10, (int)camera.target.y, GREEN);
         
         int countFPS = GetFPS();
         DrawText(TextFormat("FPS: %i", countFPS), screenWidth - 100, 15, 20, BLUE);
         DrawText(TextFormat("ver. 240126"), screenWidth - 150, 600, 20, BLUE);
         DrawText(TextFormat("coins: %i", coins), 80, 15, 20, BLUE);
-        
+  
         }
-     
-        
+     */
         EndDrawing();
         
     }
-    
+    /*
     unloadPlayer(&player);
     unloadHoe(&hoe);
     unloadWaterCan(&waterCan);
     unloadCoffeeSeeds(&coffeeSeed);
     unloadShop(&shop);
     unloadTextures();
+    */
     CloseWindow();
 
     return 0;
 }
-
-void updateCameraCenter(Camera2D *camera, Player *player, float delta, int width, int height)
-{
-    // Update the camera's offset based on zoom level and screen dimensions
-    camera->offset.x = width / (2.0f * camera->zoom);
-    camera->offset.y = height / (2.0f * camera->zoom);
-
-    // Calculate the camera's position relative to the target
-    camera->target.x = player->position.x + 32;
-    camera->target.y = player->position.y + 32;
-}
-
-
-
-
-
