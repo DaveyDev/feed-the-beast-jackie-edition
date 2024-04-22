@@ -47,7 +47,7 @@ int main() {
     camera.target = player.position;
     camera.offset = (Vector2){ screenWidth/2.0f, screenHeight/2.0f };
     camera.rotation = 0.0f;
-    camera.zoom = 0.5f;
+    camera.zoom = 1.0f;
     
     Hoe hoe;
     spawnHoe(&hoe, (Vector2){200, 300});
@@ -90,7 +90,7 @@ int main() {
 
         
          // Set the camera position
-        drawMap();
+        drawMap(camera);
         scene = menuScene();
 
         
@@ -101,13 +101,15 @@ int main() {
             
             float deltaTime = GetFrameTime();
             updatePlayer(&player, deltaTime, map);
-            camera.zoom += ((float)GetMouseWheelMove()*0.05f);
+            //camera.zoom += ((float)GetMouseWheelMove()*0.05f);
            
-            updateCameraCenter(&camera, &player, deltaTime,screenWidth, screenHeight);
+            
             
             camera.target.x = player.position.x; // Update the camera's target to follow the player
 
             BeginMode2D(camera);
+            
+            updateCameraCenter(&camera, &player, deltaTime,screenWidth, screenHeight);
             
         if (checkCollision(player.collider, hoe.collider) && IsKeyDown(KEY_E) && player.isHandEmpty) {
             
@@ -158,7 +160,8 @@ int main() {
 
         // Draw the map
         updateMap(&coffeeSeedManager);
-        drawMap();
+        
+        drawMap(camera);
         
        
    
@@ -195,7 +198,7 @@ int main() {
         interactWithCoffeeSeeds(&player, &coffeeSeedManager);
         
         
-        EndMode2D();
+        
         //float deltaTime = GetFrameTime();
         
         
@@ -204,6 +207,7 @@ int main() {
 
       
         drawPlayer(&player);
+        EndMode2D();
         
         DrawLine((int)camera.target.x, -screenHeight*10, (int)camera.target.x, screenHeight*10, GREEN);
         DrawLine(-screenWidth*10, (int)camera.target.y, screenWidth*10, (int)camera.target.y, GREEN);
