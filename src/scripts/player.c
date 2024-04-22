@@ -1,4 +1,4 @@
-#include "constrants.h"
+#include "constants.h"
 #include <math.h>
 
    
@@ -101,7 +101,7 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS]) 
     if (checkCollisionWithGrass(player, map)) {
         // If the player is colliding with the ground, stop the jump and reset vertical position
         player->isJumping = false;
-        player->position.y = floor(player->position.y / 64) * 64;
+        
         player->velocity.y = 0;
     }
 

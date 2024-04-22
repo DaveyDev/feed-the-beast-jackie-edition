@@ -3,7 +3,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
-#include "src/scripts/constrants.h"
+#include "src/scripts/constants.h"
 
 #include "src/scripts/player.c"
 #include "src/scripts/hoe.c"
@@ -196,6 +196,7 @@ int main() {
         
         drawCoffeeSeed(&coffeeSeedManager);
         interactWithCoffeeSeeds(&player, &coffeeSeedManager);
+        
         
         
         
