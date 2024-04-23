@@ -9,6 +9,7 @@ typedef struct {
     Rectangle collider;
     bool isHandEmpty;
     bool isJumping;
+    bool hitObstacle;
     Vector2 velocity;
     
 } Player;
@@ -19,8 +20,13 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     player-> speed = speed;
     player-> collider  = (Rectangle){player-> position.x, player->position.y, 64, 64};
     
+    
     player-> isHandEmpty = true;
+    player-> hitObstacle = false;
+    player-> isJumping = false;
+    
     player-> texture = LoadTexture("src/textures/player.png");
+        
     
 }
 
@@ -67,8 +73,8 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS]) 
     
     player-> collider.x = player-> position.x;
     player-> collider.y = player-> position.y;
-}
-*/
+}*/
+
 void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], Camera2D camera) {
     float speedPerSecond = player->speed * deltaTime;
     //const float speedPerSecond = 5.0f;
@@ -80,7 +86,9 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], 
         player->position.x -= speedPerSecond;
     }
     
-
+    player->hitObstacle = false;
+    checkPlayerCollisionWithMap(player, map, deltaTime);
+    
     // Handle player input for jumping
     if (IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_UP) || IsKeyDown('W')) {
         // Only allow jumping if the player is not already jumping
@@ -88,17 +96,20 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], 
             // Apply upward velocity for jumping
             player->velocity.y = -JUMP_FORCE;
             player->isJumping = true;
+            player-> hitObstacle = false;
         }
     }
     
 
     // Apply gravity to the player
+    
+  
+    if(!player->hitObstacle){
     player->velocity.y += GRAVITY * deltaTime;
     
-
     // Update player's vertical position based on velocity
     player->position.y += player->velocity.y * deltaTime;
-    
+    }
 
     // Check for collisions with the ground (grass)
     //if (checkCollisionWithGrass(player, map)) {
@@ -112,10 +123,10 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], 
     player->collider.x = player->position.x;
     player->collider.y = player->position.y;
     
-    checkPlayerCollisionWithMap(player, map);
+    
 }
 
-void checkPlayerCollisionWithMap(Player *player, int map[MAX_ROWS][MAX_COLS]) {
+void checkPlayerCollisionWithMap(Player *player, int map[MAX_ROWS][MAX_COLS], float deltaTime) {
     // Iterate through map tiles
     for (int row = 0; row < MAX_ROWS; row++) {
         for (int col = 0; col < MAX_COLS; col++) {
@@ -125,11 +136,16 @@ void checkPlayerCollisionWithMap(Player *player, int map[MAX_ROWS][MAX_COLS]) {
 
             // Check collision between player and map tile
             if (CheckCollisionRecs(player->collider, (Rectangle){ tileX, tileY, 64, 64 })) {
-                
+                printf("Velocity.y: %f\n", player->velocity.y);
                 if(map[row][col] != 0){
                     player->isJumping = false;
-        
+                    player->hitObstacle = true;
                     player->velocity.y = 0;
+                    
+                    //if(player->collider.y < tileY){
+                       // player->velocity.y -= tileY - player->collider.y;
+                    //}
+                 
                 }
                 
                 
@@ -149,11 +165,19 @@ void checkPlayerCollisionWithMap(Player *player, int map[MAX_ROWS][MAX_COLS]) {
 void drawPlayer(Player *player, Camera2D camera) {
     BeginMode2D(camera);
     
-    DrawTexture(player->texture, player->position.x, player->position.y, WHITE);
+    // Define source and destination rectangles for scaling
+    Rectangle sourceRect = { 0, 0, player->texture.width, player->texture.height }; // Source rectangle is the entire texture
+    Rectangle destRect = { player->position.x, player->position.y, 64, 64 }; // Destination rectangle is 64x64
     
+    // Draw the texture with scaling using DrawTexturePro
+    DrawTexturePro(player->texture, sourceRect, destRect, (Vector2){ 0, 0 }, 0.0f, WHITE);
+    
+    // Draw player collider
     DrawRectangleLinesEx(player->collider, 1, RED);
+    
     EndMode2D();
 }
+
 
 void unloadPlayer(Player *player) {
     UnloadTexture(player->texture);

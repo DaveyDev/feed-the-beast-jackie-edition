@@ -84,10 +84,10 @@ void drawMap(Camera2D camera){
 
                 // Drawing colliders as lines
                 case 0: // Empty tile
-                    DrawRectangleLinesEx(block, 1, WHITE);
+                    //DrawRectangleLinesEx(block, 1, WHITE);
                     break;
                 case 1: // Grass tile
-                    DrawRectangleLinesEx(block, 1, GREEN);
+                    //DrawRectangleLinesEx(block, 1, GREEN);
                     break;
                     
             }

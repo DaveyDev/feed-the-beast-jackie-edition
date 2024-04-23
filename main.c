@@ -115,7 +115,8 @@ int main() {
             
             hoe.isActive = false;
             hoe.isEquipped = true;
-            player.isHandEmpty = false;// Mark hoe as inactive (picked up)
+     
+     player.isHandEmpty = false;// Mark hoe as inactive (picked up)
             // Perform actions associated with picking up the hoe (e.g., increase score)
         }
         if (checkCollision(player.collider, waterCan.collider) && IsKeyDown(KEY_E) && player.isHandEmpty) {
@@ -210,8 +211,8 @@ int main() {
         drawPlayer(&player, camera);
         EndMode2D();
         
-        DrawLine((int)camera.target.x, -screenHeight*10, (int)camera.target.x, screenHeight*10, GREEN);
-        DrawLine(-screenWidth*10, (int)camera.target.y, screenWidth*10, (int)camera.target.y, GREEN);
+        //DrawLine((int)camera.target.x, -screenHeight*10, (int)camera.target.x, screenHeight*10, GREEN);
+        //DrawLine(-screenWidth*10, (int)camera.target.y, screenWidth*10, (int)camera.target.y, GREEN);
         
         int countFPS = GetFPS();
         DrawText(TextFormat("FPS: %i", countFPS), screenWidth - 100, 15, 20, BLUE);
