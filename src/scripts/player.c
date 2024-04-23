@@ -136,7 +136,7 @@ void checkPlayerCollisionWithMap(Player *player, int map[MAX_ROWS][MAX_COLS], fl
 
             // Check collision between player and map tile
             if (CheckCollisionRecs(player->collider, (Rectangle){ tileX, tileY, 64, 64 })) {
-                printf("Velocity.y: %f\n", player->velocity.y);
+               // printf("Velocity.y: %f\n", player->velocity.y);
                 if(map[row][col] != 0){
                     player->isJumping = false;
                     player->hitObstacle = true;

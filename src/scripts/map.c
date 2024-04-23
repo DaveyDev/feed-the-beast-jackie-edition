@@ -55,22 +55,22 @@ void drawMap(Camera2D camera){
                     case 3: //empty field, not watered
                     DrawTexture(fieldTexture, block.x, block.y, WHITE);
                     break;
-                    case 31: //empty field, watered
+                    case 4: //empty field, watered
                     DrawTexture(wateredFieldTexture, block.x, block.y, WHITE);
                     break;
-                    case 4: //empty field, not watered
+                    case 5: //empty field, not watered
                     DrawTexture(seedFieldTexture, block.x, block.y, WHITE);
                     break;
-                    case 41: //empty field, not watered
+                    case 6: //empty field, not watered
                     DrawTexture(wateredSeedFieldTexture, block.x, block.y, WHITE);
                     break;
-                    case 311: //empty field, not watered
+                    case 7: //empty field, not watered
                     DrawTexture(plantedField, block.x, block.y, WHITE);
                     break;
-                    case 32: //empty field, not watered
+                    case 8: //empty field, not watered
                     DrawTexture(weedField, block.x, block.y, WHITE);
                     break;
-                    case 53: //empty field, not watered
+                    case 9: //empty field, not watered
                     DrawTexture(bigWeedWateredSprout, block.x, block.y, WHITE);
                     break;
                     
