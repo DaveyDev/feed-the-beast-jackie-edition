@@ -100,16 +100,16 @@ int main() {
             
             
             float deltaTime = GetFrameTime();
-            updatePlayer(&player, deltaTime, map);
+            updatePlayer(&player, deltaTime, map, camera);
             //camera.zoom += ((float)GetMouseWheelMove()*0.05f);
            
             
             
-            camera.target.x = player.position.x; // Update the camera's target to follow the player
+            //camera.target.x = player.position.x; // Update the camera's target to follow the player
 
             BeginMode2D(camera);
-            
             updateCameraCenter(&camera, &player, deltaTime,screenWidth, screenHeight);
+            
             
         if (checkCollision(player.collider, hoe.collider) && IsKeyDown(KEY_E) && player.isHandEmpty) {
             
@@ -207,7 +207,7 @@ int main() {
         //cameraPosition = updateCameraFollow();
 
       
-        drawPlayer(&player);
+        drawPlayer(&player, camera);
         EndMode2D();
         
         DrawLine((int)camera.target.x, -screenHeight*10, (int)camera.target.x, screenHeight*10, GREEN);
@@ -238,13 +238,10 @@ int main() {
 
 void updateCameraCenter(Camera2D *camera, Player *player, float delta, int width, int height)
 {
-    // Update the camera's offset based on zoom level and screen dimensions
-    camera->offset.x = width / (2.0f * camera->zoom);
-    camera->offset.y = height / (2.0f * camera->zoom);
-
-    // Calculate the camera's position relative to the target
+    camera->offset = (Vector2){ width/2.0f, height/2.0f };
+    if(camera->target.x < player->position.x){
     camera->target.x = player->position.x;
-    camera->target.y = player->position.y;
+    }
 }
 
 

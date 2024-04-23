@@ -43,6 +43,7 @@ void drawMap(Camera2D camera){
                 };
 
 
+
                 // Draw different textures based on the map values
                 switch(map[row][col]){
                     case 1: //grass
@@ -78,6 +79,18 @@ void drawMap(Camera2D camera){
                     
                 }
                 
+                            switch(map[row][col]){
+                // Your texture drawing code here...
+
+                // Drawing colliders as lines
+                case 0: // Empty tile
+                    DrawRectangleLinesEx(block, 1, WHITE);
+                    break;
+                case 1: // Grass tile
+                    DrawRectangleLinesEx(block, 1, GREEN);
+                    break;
+                    
+            }
                 // Add more conditions based on your game's needs
 
                 // You can also add additional logic for player, enemies, etc.

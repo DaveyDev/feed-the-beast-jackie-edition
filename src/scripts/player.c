@@ -69,13 +69,14 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS]) 
     player-> collider.y = player-> position.y;
 }
 */
-void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS]) {
+void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], Camera2D camera) {
     float speedPerSecond = player->speed * deltaTime;
+    //const float speedPerSecond = 5.0f;
 
     // Handle player input for horizontal movement
-    if (IsKeyDown(KEY_RIGHT) || IsKeyDown('D') && player->position.x < GetScreenWidth() - 32) {
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown('D') ) {
         player->position.x += speedPerSecond;
-    } else if (IsKeyDown(KEY_LEFT) || IsKeyDown('A') && player->position.x > -32) {
+    } else if (IsKeyDown(KEY_LEFT) || IsKeyDown('A') && player->position.x > camera.target.x -320) {
         player->position.x -= speedPerSecond;
     }
     
@@ -93,29 +94,65 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS]) 
 
     // Apply gravity to the player
     player->velocity.y += GRAVITY * deltaTime;
+    
 
     // Update player's vertical position based on velocity
     player->position.y += player->velocity.y * deltaTime;
+    
 
     // Check for collisions with the ground (grass)
-    if (checkCollisionWithGrass(player, map)) {
+    //if (checkCollisionWithGrass(player, map)) {
         // If the player is colliding with the ground, stop the jump and reset vertical position
-        player->isJumping = false;
+       // player->isJumping = false;
         
-        player->velocity.y = 0;
-    }
+       //player->velocity.y = 0;
+   // }
 
     // Update player's collider position
     player->collider.x = player->position.x;
     player->collider.y = player->position.y;
+    
+    checkPlayerCollisionWithMap(player, map);
+}
+
+void checkPlayerCollisionWithMap(Player *player, int map[MAX_ROWS][MAX_COLS]) {
+    // Iterate through map tiles
+    for (int row = 0; row < MAX_ROWS; row++) {
+        for (int col = 0; col < MAX_COLS; col++) {
+            // Calculate position of map tile
+            float tileX = col * 64;
+            float tileY = row * 64;
+
+            // Check collision between player and map tile
+            if (CheckCollisionRecs(player->collider, (Rectangle){ tileX, tileY, 64, 64 })) {
+                
+                if(map[row][col] != 0){
+                    player->isJumping = false;
+        
+                    player->velocity.y = 0;
+                }
+                
+                
+                // Handle collision
+                // For example, stop player movement or adjust player position
+                // You can also add specific actions based on the type of tile collided with
+                // For instance, if it's a wall tile, prevent the player from moving through it
+            }
+        }
+    }
 }
 
 
 
 
-void drawPlayer(Player *player) {
+
+void drawPlayer(Player *player, Camera2D camera) {
+    BeginMode2D(camera);
     
     DrawTexture(player->texture, player->position.x, player->position.y, WHITE);
+    
+    DrawRectangleLinesEx(player->collider, 1, RED);
+    EndMode2D();
 }
 
 void unloadPlayer(Player *player) {
