@@ -150,11 +150,11 @@ int main() {
             player.isHandEmpty = true;
         }
 
-        
+        /*
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
           
         clickOnTile(&player, &hoe, &waterCan);
-        }
+        }*/
         
         BeginDrawing();
         ClearBackground(RAYWHITE);
@@ -216,8 +216,8 @@ int main() {
         
         int countFPS = GetFPS();
         DrawText(TextFormat("FPS: %i", countFPS), screenWidth - 100, 15, 20, BLUE);
-        DrawText(TextFormat("ver. 240126"), screenWidth - 150, 600, 20, BLUE);
-        DrawText(TextFormat("coins: %i", coins), 80, 15, 20, BLUE);
+        DrawText(TextFormat("ver. 240424"), screenWidth - 150, 600, 20, BLUE);
+        DrawText(TextFormat("coffee: %i", coins), 80, 15, 20, BLUE);
         
         }
      
@@ -239,7 +239,7 @@ int main() {
 
 void updateCameraCenter(Camera2D *camera, Player *player, float delta, int width, int height)
 {
-    camera->offset = (Vector2){ width/2.0f, height/2.0f };
+    camera->offset = (Vector2){ width/2.0f, height/2.0f - 48 };
     if(camera->target.x < player->position.x){
     camera->target.x = player->position.x;
     }

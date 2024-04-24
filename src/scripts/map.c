@@ -46,31 +46,31 @@ void drawMap(Camera2D camera){
 
                 // Draw different textures based on the map values
                 switch(map[row][col]){
-                    case 1: //grass
+                    case 1: //stone brick
                     DrawTexture(grassTexture, block.x, block.y, WHITE);
                     break;
-                    case 2: //sand
+                    case 2: //
                     DrawTexture(sandTexture, block.x, block.y, WHITE);
                     break;
-                    case 3: //empty field, not watered
+                    case 3: //
                     DrawTexture(fieldTexture, block.x, block.y, WHITE);
                     break;
-                    case 4: //empty field, watered
+                    case 4: //
                     DrawTexture(wateredFieldTexture, block.x, block.y, WHITE);
                     break;
-                    case 5: //empty field, not watered
+                    case 5: //
                     DrawTexture(seedFieldTexture, block.x, block.y, WHITE);
                     break;
-                    case 6: //empty field, not watered
+                    case 6: //
                     DrawTexture(wateredSeedFieldTexture, block.x, block.y, WHITE);
                     break;
-                    case 7: //empty field, not watered
+                    case 7: //
                     DrawTexture(plantedField, block.x, block.y, WHITE);
                     break;
-                    case 8: //empty field, not watered
+                    case 8: //
                     DrawTexture(weedField, block.x, block.y, WHITE);
                     break;
-                    case 9: //empty field, not watered
+                    case 9: //
                     DrawTexture(bigWeedWateredSprout, block.x, block.y, WHITE);
                     break;
                     
@@ -79,25 +79,13 @@ void drawMap(Camera2D camera){
                     
                 }
                 
-                            switch(map[row][col]){
-                // Your texture drawing code here...
-
-                // Drawing colliders as lines
-                case 0: // Empty tile
-                    //DrawRectangleLinesEx(block, 1, WHITE);
-                    break;
-                case 1: // Grass tile
-                    //DrawRectangleLinesEx(block, 1, GREEN);
-                    break;
-                    
-            }
-                // Add more conditions based on your game's needs
-
-                // You can also add additional logic for player, enemies, etc.
+                            
+                
             }
         }
         EndMode2D();
 }
+/*
 void clickOnTile(Player *player, Hoe *hoe, WaterCan *waterCan){
     
             Vector2 mousePos = GetMousePosition();
@@ -125,7 +113,7 @@ void clickOnTile(Player *player, Hoe *hoe, WaterCan *waterCan){
             }
             
             }
-}
+}*/
 
 
 void updateMap(CoffeeSeedManager *coffeeSeedManager){

@@ -25,14 +25,15 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     player-> position.y = screenHeight/2;
     player-> speed = speed;
     player-> collider  = (Rectangle){player-> position.x, player->position.y, 64, 64};
-    player-> colliderDown  = (Rectangle){player-> position.x, player->position.y + LOWER_COLLIDER_OFFSET, 64, 8};
+    player-> colliderDown  = (Rectangle){player-> position.x, player->position.y + LOWER_COLLIDER_OFFSET, 60, 8};
     //player-> collider  = (Rectangle){player-> position.x, player->position.y, 64, 64};
-    player-> colliderUp  = (Rectangle){player-> position.x, player->position.y, 64, 8};
-    player-> colliderLeft  = (Rectangle){player-> position.x, player->position.y, 8, 64};
-    player-> colliderRight  = (Rectangle){player-> position.x + RIGHT_COLLIDER_OFFSET, player->position.y, 8, 64};
+    player-> colliderUp  = (Rectangle){player-> position.x, player->position.y, 60, 8};
+    player-> colliderLeft  = (Rectangle){player-> position.x, player->position.y, 8, 60};
+    player-> colliderRight  = (Rectangle){player-> position.x + RIGHT_COLLIDER_OFFSET, player->position.y, 8, 60};
     
     
-    
+    player->hitLeft = false;
+    player->hitRight = false;
     player-> isHandEmpty = true;
     player-> hitObstacle = false;
     player-> isJumping = false;
@@ -90,16 +91,25 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS]) 
 void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], Camera2D camera) {
     float speedPerSecond = player->speed * deltaTime;
     //const float speedPerSecond = 5.0f;
-
+    checkCollisionLeft(player, map, deltaTime);
+    checkCollisionRight(player, map, deltaTime);
     // Handle player input for horizontal movement
-    if (IsKeyDown(KEY_RIGHT) || IsKeyDown('D') && player->hitRight == false) {
-        player->position.x += speedPerSecond;
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown('D')) {
+        if(player->hitRight == false){
+            player->position.x += speedPerSecond;
+        }
     } else if (IsKeyDown(KEY_LEFT) || IsKeyDown('A') && player->position.x > camera.target.x -320 && player->hitLeft == false) {
         player->position.x -= speedPerSecond;
     }
     
+    
+    
+    player->hitLeft = false;
+    player->hitRight = false;
     player->hitObstacle = false;
-    checkPlayerCollisionWithMap(player, map, deltaTime);
+    //checkPlayerCollisionWithMap(player, map, deltaTime);
+    checkCollisionDown(player, map, deltaTime);
+    checkCollisionUp(player, map, deltaTime);
     //checkCollisionWithCoffe();
     
     // Handle player input for jumping
@@ -133,23 +143,23 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], 
    // }
 
     // Update player's collider position
-    player->collider.x = player->position.x;
+    player->collider.x = player->position.x + 1;
     player->collider.y = player->position.y;
     
     player->colliderUp.x = player->position.x;
     player->colliderUp.y = player->position.y + LOWER_COLLIDER_OFFSET;
     
-    player->colliderDown.x = player->position.x;
+    player->colliderDown.x = player->position.x + 1 ;
     player->colliderDown.y = player->position.y;
     
-    player->colliderLeft.x = player->position.x;
-    player->colliderLeft.y = player->position.y;
+    player->colliderLeft.x = player->position.x - 2;
+    player->colliderLeft.y = player->position.y + 2;
     
     player->colliderRight.x = player->position.x + RIGHT_COLLIDER_OFFSET;
-    player->colliderRight.y = player->position.y;
+    player->colliderRight.y = player->position.y + 2;
         
 }
-
+/*
 void checkPlayerCollisionWithMap(Player *player, int map[MAX_ROWS][MAX_COLS], float deltaTime) {
     // Iterate through map tiles
     for (int row = 0; row < MAX_ROWS; row++) {
@@ -158,7 +168,6 @@ void checkPlayerCollisionWithMap(Player *player, int map[MAX_ROWS][MAX_COLS], fl
             float tileX = col * 64;
             float tileY = row * 64;
 
-            // Check collision between player and map tile
             if (CheckCollisionRecs(player->colliderUp, (Rectangle){ tileX, tileY, 64, 64 })) {
                // printf("Velocity.y: %f\n", player->velocity.y);
                 if(map[row][col] != 0){
@@ -171,14 +180,13 @@ void checkPlayerCollisionWithMap(Player *player, int map[MAX_ROWS][MAX_COLS], fl
                     //}
                  
                 }
-                
-             
+            }
                 
                 // Handle collision
                 // For example, stop player movement or adjust player position
                 // You can also add specific actions based on the type of tile collided with
                 // For instance, if it's a wall tile, prevent the player from moving through it
-            }
+            
             if(CheckCollisionRecs(player->colliderDown, (Rectangle){tileX, tileY, 64, 64})){
                 if(map[row][col] != 0){
                    
@@ -201,6 +209,7 @@ void checkPlayerCollisionWithMap(Player *player, int map[MAX_ROWS][MAX_COLS], fl
                 if(map[row][col] != 0){
                    
                     player->hitRight = true;
+                    
                    
                  
                 } else { 
@@ -211,6 +220,87 @@ void checkPlayerCollisionWithMap(Player *player, int map[MAX_ROWS][MAX_COLS], fl
             }
         }
     }
+    */
+// Function to check collision with tiles above the player
+void checkCollisionUp(Player *player, int map[MAX_ROWS][MAX_COLS]) {
+    for (int row = 0; row < MAX_ROWS; row++) {
+        for (int col = 0; col < MAX_COLS; col++) {
+            float tileX = col * 64;
+            float tileY = row * 64;
+
+            if (CheckCollisionRecs(player->colliderUp, (Rectangle){ tileX, tileY, 64, 64 })) {
+                if(map[row][col] != 0){
+                    player->isJumping = false;
+                    player->hitObstacle = true;
+                    player->velocity.y = 0;
+                    float overlapY = player->position.y + 64 - tileY;
+
+                    // Adjust the player's position to prevent overlap
+                    player->position.y -= overlapY;
+                }
+            }
+        }
+    }
+}
+
+// Function to check collision with tiles below the player
+void checkCollisionDown(Player *player, int map[MAX_ROWS][MAX_COLS]) {
+    
+    for (int row = 0; row < MAX_ROWS; row++) {
+        for (int col = 0; col < MAX_COLS; col++) {
+            float tileX = col * 64;
+            float tileY = row * 64;
+
+            if (CheckCollisionRecs(player->colliderDown, (Rectangle){ tileX, tileY, 64, 64 })) {
+                if(map[row][col] != 0){
+                    player->velocity.y = 0;
+                    
+                    float overlapY = tileY + 64 - player->position.y;
+
+                    // Adjust the player's position to prevent overlap
+                    player->position.y += overlapY;
+                }
+            }
+        }
+    }
+}
+
+// Function to check collision with tiles to the left of the player
+void checkCollisionLeft(Player *player, int map[MAX_ROWS][MAX_COLS]) {
+    for (int row = 0; row < MAX_ROWS; row++) {
+        for (int col = 0; col < MAX_COLS; col++) {
+            float tileX = col * 64;
+            float tileY = row * 64;
+
+            if (CheckCollisionRecs(player->colliderLeft, (Rectangle){ tileX, tileY, 64, 64 })) {
+                if(map[row][col] != 0){
+                    player->hitLeft = true;
+                } 
+            }
+        }
+    }
+}
+
+// Function to check collision with tiles to the right of the player
+void checkCollisionRight(Player *player, int map[MAX_ROWS][MAX_COLS]) {
+   
+    for (int row = 0; row < MAX_ROWS; row++) {
+        for (int col = 0; col < MAX_COLS; col++) {
+            float tileX = col * 64;
+            float tileY = row * 64;
+
+            if (CheckCollisionRecs(player->colliderRight, (Rectangle){ tileX, tileY, 64, 64 })) {
+                if(map[row][col] != 0){
+                    player->hitRight = true;
+                    
+                }
+            }
+        }
+    }
+}
+
+    
+    
 /*
 void checkPlayerCollisionWithMap(Player *player, int map[MAX_ROWS][MAX_COLS], float deltaTime) {
     // Iterate through map tiles

@@ -5,7 +5,7 @@
 #define MAX_COLS 120
 
 #define GRAVITY 400.0f
-#define JUMP_FORCE 350.0f
+#define JUMP_FORCE 400.0f
 
 #define LOWER_COLLIDER_OFFSET 56
 #define RIGHT_COLLIDER_OFFSET 56
