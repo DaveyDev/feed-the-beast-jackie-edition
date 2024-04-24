@@ -50,13 +50,13 @@ int main() {
     camera.zoom = 1.0f;
     
     Hoe hoe;
-    spawnHoe(&hoe, (Vector2){200, 300});
+    //spawnHoe(&hoe, (Vector2){200, 300});
     
     WaterCan waterCan;
-    spawnWaterCan(&waterCan, (Vector2){300, 200});
+    //spawnWaterCan(&waterCan, (Vector2){300, 200});
     
     Shop shop;
-    spawnShop(&shop, (Vector2){200, 50});
+    //spawnShop(&shop, (Vector2){200, 50});
     
     CoffeeSeed coffeeSeed;
     CoffeeSeedManager coffeeSeedManager = {0};
@@ -65,10 +65,10 @@ int main() {
     CoffeePlantManager coffeePlantManager = {0};
     
     
-    spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){100, 300});
-    coffeeSeedManager.numSeeds++;
-    spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){100, 350});
-    coffeeSeedManager.numSeeds++;
+    //spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){100, 300});
+    //coffeeSeedManager.numSeeds++;
+    //spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){100, 350});
+    //coffeeSeedManager.numSeeds++;
     
     
 
