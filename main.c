@@ -39,15 +39,20 @@ int main() {
     
     
     Player player;
-    initPlayer(&player, screenWidth, screenHeight - 100, 213.7f); // Initial position and speed
+    initPlayer(&player, screenWidth, screenHeight  - 100, 213.7f); // Initial position and speed
     
     //Vector2 cameraPosition = updateCameraFollow();
         
     Camera2D camera = { 0 };
-    camera.target = player.position;
+    camera.target.x = player.position.x;
+    camera.target.y = player.position.y - 100;
     camera.offset = (Vector2){ screenWidth/2.0f, screenHeight/2.0f };
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
+    
+    
+    
+    
     
     Hoe hoe;
     //spawnHoe(&hoe, (Vector2){200, 300});
@@ -157,7 +162,7 @@ int main() {
         }*/
         
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(DARKGRAY);
 
         // Draw the map
         updateMap(&coffeeSeedManager);
@@ -242,6 +247,9 @@ void updateCameraCenter(Camera2D *camera, Player *player, float delta, int width
     camera->offset = (Vector2){ width/2.0f, height/2.0f - 48 };
     if(camera->target.x < player->position.x){
     camera->target.x = player->position.x;
+    }
+    if(player->position.y < 650 && player->position.y > 200){
+    camera->target.y = player->position.y;
     }
 }
 

@@ -17,12 +17,13 @@ typedef struct {
     bool hitLeft;
     bool hitRight;
     Vector2 velocity;
+    float maxY;
     
 } Player;
 
 void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) {
     player-> position.x = screenWidth/2;
-    player-> position.y = screenHeight/2;
+    player-> position.y = 768;
     player-> speed = speed;
     player-> collider  = (Rectangle){player-> position.x, player->position.y, 64, 64};
     player-> colliderDown  = (Rectangle){player-> position.x, player->position.y + LOWER_COLLIDER_OFFSET, 60, 8};
@@ -31,7 +32,7 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     player-> colliderLeft  = (Rectangle){player-> position.x, player->position.y, 8, 60};
     player-> colliderRight  = (Rectangle){player-> position.x + RIGHT_COLLIDER_OFFSET, player->position.y, 8, 60};
     
-    
+    player->maxY = player->position.y;
     player->hitLeft = false;
     player->hitRight = false;
     player-> isHandEmpty = true;
@@ -98,7 +99,7 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], 
         if(player->hitRight == false){
             player->position.x += speedPerSecond;
         }
-    } else if (IsKeyDown(KEY_LEFT) || IsKeyDown('A') && player->position.x > camera.target.x -320 && player->hitLeft == false) {
+    } else if (IsKeyDown(KEY_LEFT) || IsKeyDown('A') && player->position.x > camera.target.x - GetScreenWidth()/2 && player->hitLeft == false) {
         player->position.x -= speedPerSecond;
     }
     

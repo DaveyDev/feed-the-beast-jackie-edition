@@ -30,9 +30,9 @@ void loadTextures() {
     grassTexture = scaleTexture(LoadTexture("src/textures/1.png"), 64, 64);
     sandTexture = scaleTexture(LoadTexture("src/textures/2.png"), 64, 64);
     fieldTexture = scaleTexture(LoadTexture("src/textures/3.png"), 64, 64);
-    wateredFieldTexture = scaleTexture(LoadTexture("src/textures/31.png"), 64, 64);
-    seedFieldTexture = scaleTexture(LoadTexture("src/textures/4.png"), 64, 64);
-    wateredSeedFieldTexture = scaleTexture(LoadTexture("src/textures/41.png"), 64, 64);
+    wateredFieldTexture = scaleTexture(LoadTexture("src/textures/4.png"), 64, 64);
+    seedFieldTexture = scaleTexture(LoadTexture("src/textures/5.png"), 64, 64);
+    wateredSeedFieldTexture = scaleTexture(LoadTexture("src/textures/6.png"), 64, 64);
     emptyHand = scaleTexture(LoadTexture("src/textures/emptyHand.png"), 64, 64);
     drySprout = scaleTexture(LoadTexture("src/textures/5.png"), 64, 64);
     wateredSprout = scaleTexture(LoadTexture("src/textures/51.png"), 64, 64);
