@@ -39,7 +39,7 @@ int main() {
     
     
     Player player;
-    initPlayer(&player, screenWidth, screenHeight  - 100, 213.7f); // Initial position and speed
+    initPlayer(&player, screenWidth, screenHeight  - 100); // Initial position and speed
     
     //Vector2 cameraPosition = updateCameraFollow();
         
@@ -49,8 +49,6 @@ int main() {
     camera.offset = (Vector2){ screenWidth/2.0f, screenHeight/2.0f };
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
-    
-    
     
     
     
@@ -72,8 +70,11 @@ int main() {
     
     //spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){100, 300});
     //coffeeSeedManager.numSeeds++;
-    //spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){100, 350});
-    //coffeeSeedManager.numSeeds++;
+    
+    
+    spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){200, 750}, camera);
+    coffeeSeedManager.numSeeds++;
+    
     
     
 
@@ -185,9 +186,9 @@ int main() {
             CoffeeSeed *coffeeSeed = &coffeeSeedManager.coffeeSeed[i];
         if(checkCollision(shop.collider, coffeeSeed->collider)){
             coffeeSeed->isActive = false;
-            coffeeSeed->collider.x = 1000;
-            coffeeSeed->collider.y = 1000;
+            if(checkCollision(coffeeSeed->collider, player.collider)){
             coins++;
+            }
             
         }}
         
@@ -200,7 +201,7 @@ int main() {
         interactWithCoffeePlants(&player, &coffeePlantManager, map, lastChangeTimes);
         drawCoffeePlant(&coffeePlantManager);
         
-        drawCoffeeSeed(&coffeeSeedManager);
+        drawCoffeeSeed(&coffeeSeedManager, camera);
         interactWithCoffeeSeeds(&player, &coffeeSeedManager);
         
         
@@ -220,9 +221,9 @@ int main() {
         //DrawLine(-screenWidth*10, (int)camera.target.y, screenWidth*10, (int)camera.target.y, GREEN);
         
         int countFPS = GetFPS();
-        DrawText(TextFormat("FPS: %i", countFPS), screenWidth - 100, 15, 20, BLUE);
-        DrawText(TextFormat("ver. 240424"), screenWidth - 150, 600, 20, BLUE);
-        DrawText(TextFormat("coffee: %i", coins), 80, 15, 20, BLUE);
+        DrawText(TextFormat("FPS: %i", countFPS), screenWidth - 100, 15, 20, WHITE);
+        DrawText(TextFormat("ver. 240425"), screenWidth - 150, 600, 20, WHITE);
+        DrawText(TextFormat("coffee: %i", player.points), 80, 15, 20, WHITE);
         
         }
      

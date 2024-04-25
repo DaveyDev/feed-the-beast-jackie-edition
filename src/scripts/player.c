@@ -18,32 +18,34 @@ typedef struct {
     bool hitRight;
     Vector2 velocity;
     float maxY;
+    int hearts;
+    int points;
     
 } Player;
 
-void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) {
+void initPlayer(Player *player, int screenWidth, int screenHeight) {
     player-> position.x = screenWidth/2;
     player-> position.y = 768;
-    player-> speed = speed;
+    player-> speed = PLAYER_SPEED;
     player-> collider  = (Rectangle){player-> position.x, player->position.y, 64, 64};
     player-> colliderDown  = (Rectangle){player-> position.x, player->position.y + LOWER_COLLIDER_OFFSET, 60, 8};
     //player-> collider  = (Rectangle){player-> position.x, player->position.y, 64, 64};
     player-> colliderUp  = (Rectangle){player-> position.x, player->position.y, 60, 8};
     player-> colliderLeft  = (Rectangle){player-> position.x, player->position.y, 8, 60};
     player-> colliderRight  = (Rectangle){player-> position.x + RIGHT_COLLIDER_OFFSET, player->position.y, 8, 60};
-    
+    player->hearts = 1;
     player->maxY = player->position.y;
     player->hitLeft = false;
     player->hitRight = false;
     player-> isHandEmpty = true;
     player-> hitObstacle = false;
     player-> isJumping = false;
-    
+    player->points = 0;
     player-> texture = LoadTexture("src/textures/player.png");
         
     
 }
-
+/*
 bool checkCollisionWithGrass(Player *player, int map[MAX_ROWS][MAX_COLS]) {
     // Iterate over the map
     for (int row = 0; row < MAX_ROWS; row++) {
@@ -64,7 +66,7 @@ bool checkCollisionWithGrass(Player *player, int map[MAX_ROWS][MAX_COLS]) {
     // No collision detected with grass blocks
     return false;
 }
-
+*/
 /*
 void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS]) {
     float speedPerSecond = player->speed * deltaTime;
@@ -123,6 +125,7 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], 
             player-> hitObstacle = false;
         }
     }
+    
     
 
     // Apply gravity to the player
@@ -230,7 +233,13 @@ void checkCollisionUp(Player *player, int map[MAX_ROWS][MAX_COLS]) {
             float tileY = row * 64;
 
             if (CheckCollisionRecs(player->colliderUp, (Rectangle){ tileX, tileY, 64, 64 })) {
-                if(map[row][col] != 0){
+                if(map[row][col] == 3 && IsKeyDown(KEY_DOWN)){
+                    map[row][col] = 0;
+                    player->velocity.y -= BREAK_BOUNCE;
+                    
+                    
+                }
+                 if(map[row][col] != 0){
                     player->isJumping = false;
                     player->hitObstacle = true;
                     player->velocity.y = 0;
@@ -253,6 +262,12 @@ void checkCollisionDown(Player *player, int map[MAX_ROWS][MAX_COLS]) {
             float tileY = row * 64;
 
             if (CheckCollisionRecs(player->colliderDown, (Rectangle){ tileX, tileY, 64, 64 })) {
+                
+                if(map[row][col] == 3){
+                    map[row][col] = 0;
+                    player->velocity.y += BREAK_BOUNCE;
+                    
+                }
                 if(map[row][col] != 0){
                     player->velocity.y = 0;
                     
@@ -261,7 +276,8 @@ void checkCollisionDown(Player *player, int map[MAX_ROWS][MAX_COLS]) {
                     // Adjust the player's position to prevent overlap
                     player->position.y += overlapY;
                 }
-            }
+                
+            } 
         }
     }
 }

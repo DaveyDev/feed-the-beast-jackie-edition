@@ -33,18 +33,19 @@ void spawnCoffeeSeed(CoffeeSeed *coffeeSeed, Vector2 position) {
     coffeeSeed-> texture = LoadTexture("src/textures/coffeeSeed.png");
 }
 */
-void spawnCoffeeSeed(CoffeeSeed *coffeeSeed, Vector2 position) {
-    
+void spawnCoffeeSeed(CoffeeSeed *coffeeSeed, Vector2 position, Camera2D camera) {
+        BeginMode2D(camera);
         coffeeSeed->position = position;
         coffeeSeed->isActive = true;
         coffeeSeed->isEquipped = false;
         coffeeSeed->collider = (Rectangle){position.x, position.y, 64, 64};
         coffeeSeed->texture = LoadTexture("src/textures/coffeeSeed.png");
-        
+        EndMode2D();
     
 }
 
-void drawCoffeeSeed(CoffeeSeedManager *coffeeSeedManager) {
+void drawCoffeeSeed(CoffeeSeedManager *coffeeSeedManager, Camera2D camera) {
+    BeginMode2D(camera);
     for (int i = 0; i < coffeeSeedManager-> numSeeds; i++) {
         CoffeeSeed *coffeeSeed = &coffeeSeedManager-> coffeeSeed[i];
         if (coffeeSeed->isActive) {
@@ -53,6 +54,7 @@ void drawCoffeeSeed(CoffeeSeedManager *coffeeSeedManager) {
             DrawTexture(coffeeSeed->texture, 0, 0, WHITE); // Example: Draw equipped coffeeSeed at a fixed position
         }
     }
+    EndMode2D();
 }
 /*
 void drawCoffeeSeed(CoffeeSeed *coffeeSeed) {
@@ -76,27 +78,15 @@ void interactWithCoffeeSeeds(Player *player, CoffeeSeedManager *coffeeSeedManage
     for (int i = 0; i < coffeeSeedManager->numSeeds; i++) {
         CoffeeSeed *coffeeSeed = &coffeeSeedManager->coffeeSeed[i];
         
-        if (checkCollision(player->collider, coffeeSeed->collider) && IsKeyDown(KEY_E) && player->isHandEmpty) {
+        if (checkCollision(player->collider, coffeeSeed->collider) && coffeeSeed->isActive) {
             coffeeSeed->isActive = false;
-            coffeeSeed->isEquipped = true;
-            player->isHandEmpty = false;
+            
+            player->points++;
             // Perform actions associated with picking up the coffee seed
         } 
         
-        if (coffeeSeed->isEquipped && IsKeyDown(KEY_Q)) {
-            coffeeSeed->isActive = true;
-            coffeeSeed->isEquipped = false;
-            coffeeSeed->position = player->position;
-            coffeeSeed->collider.x = player->position.x;
-            coffeeSeed->collider.y = player->position.y;
-            player->isHandEmpty = true;
-        }
-        
-        
-        
-        
-        
     }
+    
 }
 
 void unloadCoffeeSeeds(CoffeeSeed *coffeeSeed){

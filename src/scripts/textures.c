@@ -1,5 +1,5 @@
 
-Texture2D grassTexture;
+Texture2D brickTexture;
 Texture2D sandTexture;
 Texture2D fieldTexture;
 Texture2D wateredFieldTexture;
@@ -27,7 +27,7 @@ Texture2D scaleTexture(Texture2D texture, int newWidth, int newHeight) {
 }
 
 void loadTextures() {
-    grassTexture = scaleTexture(LoadTexture("src/textures/1.png"), 64, 64);
+    brickTexture = scaleTexture(LoadTexture("src/textures/1.png"), 64, 64);
     sandTexture = scaleTexture(LoadTexture("src/textures/2.png"), 64, 64);
     fieldTexture = scaleTexture(LoadTexture("src/textures/3.png"), 64, 64);
     wateredFieldTexture = scaleTexture(LoadTexture("src/textures/4.png"), 64, 64);
@@ -45,7 +45,7 @@ void loadTextures() {
 
 void unloadTextures(){
     
-    UnloadTexture(grassTexture);
+    UnloadTexture(brickTexture);
     UnloadTexture(sandTexture);
     UnloadTexture(fieldTexture);
     UnloadTexture(wateredFieldTexture);

@@ -5,6 +5,7 @@
 
 
 
+
 int map[MAX_ROWS][MAX_COLS];
 time_t lastChangeTimes[MAX_ROWS][MAX_COLS];
 
@@ -32,6 +33,8 @@ void loadMap(const char *filename) {
 
 void drawMap(Camera2D camera){
     BeginMode2D(camera);
+    
+
     for (int row = 0; row < MAX_ROWS; row++) {
             for (int col = 0; col < MAX_COLS; col++) {
                 // Adjust the size and position based on your needs
@@ -47,7 +50,7 @@ void drawMap(Camera2D camera){
                 // Draw different textures based on the map values
                 switch(map[row][col]){
                     case 1: //stone brick
-                    DrawTexture(grassTexture, block.x, block.y, WHITE);
+                    DrawTexture(brickTexture, block.x, block.y, WHITE);
                     break;
                     case 2: //
                     DrawTexture(sandTexture, block.x, block.y, WHITE);
@@ -118,6 +121,8 @@ void clickOnTile(Player *player, Hoe *hoe, WaterCan *waterCan){
 
 void updateMap(CoffeeSeedManager *coffeeSeedManager){
     
+    
+    
     time_t currentTime = time(NULL);
 
     // Iterate over the map
@@ -141,10 +146,10 @@ void updateMap(CoffeeSeedManager *coffeeSeedManager){
                 
             }
             if(map[row][col] == 311 && currentTime - lastChangeTimes[row][col] >= 40){
-                spawnCoffeeSeed(&coffeeSeedManager->coffeeSeed[coffeeSeedManager->numSeeds], (Vector2){col * 64 + 10, row * 64 + 10});
-                coffeeSeedManager-> numSeeds++;
-                lastChangeTimes[row][col] = currentTime;
-                map[row][col] = 53;
+                //spawnCoffeeSeed(&coffeeSeedManager->coffeeSeed[coffeeSeedManager->numSeeds], (Vector2){col * 64 + 10, row * 64 + 10} );
+                //coffeeSeedManager-> numSeeds++;
+                //lastChangeTimes[row][col] = currentTime;
+                //map[row][col] = 53;
                 
             }
             

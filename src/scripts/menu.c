@@ -6,6 +6,12 @@ Color noColor = (Color){0, 0, 0, 0};
 
 Rectangle playButton = {832/2 - 100, 640/2, 200, 50};
 
+const char *title = "FEED THE BEAST";
+const int titleFontSize = 48;
+const char *subtitle = "JACKIE EDITION";
+const int subtitleFontSize = 40;
+char *playBtn = "UwU";
+const int playBtnFontSize = 30;
 
 int menuScene(){
     
@@ -19,11 +25,25 @@ int menuScene(){
     if (CheckCollisionPointRec(mousePoint, playButton)) DrawRectangleRec(playButton, buttonColor);
     else DrawRectangleRec(playButton, noColor);
     
-
-
-    DrawText("JACKIE MAKES COFFEE", GetScreenWidth()/2 - 250, GetScreenHeight()/2 - 150, 40, WHITE);
-    DrawText("PLAY", GetScreenWidth()/2 - 40, GetScreenHeight()/2 + 12, 30, WHITE);
+    // Measure the width of the text
+    int titleWidth = MeasureText(title, titleFontSize);
+    int titlePosX = (GetScreenWidth() - titleWidth) / 2;
     
+    int subtitleWidth = MeasureText(subtitle, subtitleFontSize);
+    int subtitlePosX = (GetScreenWidth() - subtitleWidth) / 2;
+    
+    int playBtnWidth = MeasureText(playBtn, playBtnFontSize);
+    int playBtnPosX = (GetScreenWidth() - playBtnWidth) / 2;
+    
+    DrawText(title, titlePosX, GetScreenHeight()/2 - 150, titleFontSize, WHITE);
+    DrawText(subtitle, subtitlePosX, GetScreenHeight()/2 - 100, subtitleFontSize, WHITE);
+    DrawText(playBtn, playBtnPosX, GetScreenHeight()/2 + 12, playBtnFontSize, WHITE);
+    
+    if (CheckCollisionPointRec(mousePoint, playButton)){
+        playBtn = ">w<";
+    } else {
+        playBtn = "UwU";
+    }
     if (CheckCollisionPointRec(mousePoint, playButton) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) return 1;  
     
     
