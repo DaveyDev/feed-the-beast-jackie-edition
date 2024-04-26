@@ -4,6 +4,10 @@
 #include <raymath.h>
 
 #include "src/scripts/constants.h"
+#include "src/scripts/coffeeSeedManager.h"
+#include "src/scripts/coffeeSeed.h"
+#include "src/scripts/player.h"
+
 
 #include "src/scripts/player.c"
 #include "src/scripts/hoe.c"
@@ -17,7 +21,7 @@
 #include "src/scripts/shop.c"
 //#include "src/scripts/cameraFollow.c"
 
-
+int scene = 0;
 
 //Vector2 target = { 0 };
 
@@ -25,7 +29,8 @@
 int main() {
     // Load the map from the text file
     loadMap("src/map.txt");
-    int scene = 0;
+    
+    int test = 0;
     //int numSeeds = 0;
     
     int coins = 0;
@@ -39,13 +44,13 @@ int main() {
     
     
     Player player;
-    initPlayer(&player, screenWidth, screenHeight  - 100); // Initial position and speed
+    //initPlayer(&player, screenWidth, screenHeight  - 100); // Initial position and speed
     
     //Vector2 cameraPosition = updateCameraFollow();
         
     Camera2D camera = { 0 };
-    camera.target.x = player.position.x;
-    camera.target.y = player.position.y - 100;
+    //camera.target.x = player.position.x;
+    //camera.target.y = player.position.y - 100;
     camera.offset = (Vector2){ screenWidth/2.0f, screenHeight/2.0f };
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
@@ -74,6 +79,19 @@ int main() {
     
     spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){200, 750}, camera);
     coffeeSeedManager.numSeeds++;
+    //dont do that like this    
+    spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){1300, 650}, camera);
+    coffeeSeedManager.numSeeds++;
+    spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){200, 750}, camera);
+    coffeeSeedManager.numSeeds++;
+    spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){200, 750}, camera);
+    coffeeSeedManager.numSeeds++;
+    spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){200, 750}, camera);
+    coffeeSeedManager.numSeeds++;
+    spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){200, 750}, camera);
+    coffeeSeedManager.numSeeds++;
+    spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){200, 750}, camera);
+    coffeeSeedManager.numSeeds++;
     
     
     
@@ -84,25 +102,31 @@ int main() {
 
     while (!WindowShouldClose()) {
         
-   
 
 
-        if(scene == 0){
+    switch(scene){
+    case 0:
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        
+        //initPlayer(&player, screenWidth, screenHeight  - 100);
         //ameraUpdaters[cameraOption](&camera, &player, envItems, envItemsLength, deltaTime, screenWidth, screenHeight);
-        
-
-        
-         // Set the camera position
-        drawMap(camera);
+        if(test == 0){
+            initPlayer(&player, screenWidth, screenHeight  - 100);
+            camera.target.x = player.position.x;
+            camera.target.y = player.position.y - 100;
+            
+            
+            
+            test++;
+        }
+    // Set the camera position
+        //drawMap(camera);
         scene = menuScene();
 
         
-        }
+    break;
         
-        if(scene != 0){
+    case 1:
             
             
             float deltaTime = GetFrameTime();
@@ -201,7 +225,7 @@ int main() {
         interactWithCoffeePlants(&player, &coffeePlantManager, map, lastChangeTimes);
         drawCoffeePlant(&coffeePlantManager);
         
-        drawCoffeeSeed(&coffeeSeedManager, camera);
+        drawCoffeeSeeds(&coffeeSeedManager, camera);
         interactWithCoffeeSeeds(&player, &coffeeSeedManager);
         
         
@@ -225,8 +249,40 @@ int main() {
         DrawText(TextFormat("ver. 240425"), screenWidth - 150, 600, 20, WHITE);
         DrawText(TextFormat("coffee: %i", player.points), 80, 15, 20, WHITE);
         
-        }
-     
+    break;
+    
+    case 2:
+    
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        
+        //ameraUpdaters[cameraOption](&camera, &player, envItems, envItemsLength, deltaTime, screenWidth, screenHeight);
+        
+        // Set the camera position
+        //drawMap(camera);
+        test = 0;
+        scene = deathScene();
+    
+    
+        break;
+        
+    case 3:
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        
+        //ameraUpdaters[cameraOption](&camera, &player, envItems, envItemsLength, deltaTime, screenWidth, screenHeight);
+        
+        // Set the camera position
+        //drawMap(camera);
+        test = 0;
+        scene = winScene();
+        
+    }
+    if(scene == 1 || scene == 2){
+    scene = sceneCheck();
+    test = 0;
+    }
+    printf("Current Scene: %d\n", scene);
         
         EndDrawing();
         

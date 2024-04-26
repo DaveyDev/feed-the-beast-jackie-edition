@@ -65,6 +65,18 @@ int main() {
         ClearBackground(RAYWHITE);
         drawMap(camera);
         
+            Vector2 mousePos = GetMousePosition();
+    Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
+
+    // Convert world position to screen coordinates for drawing text
+    Vector2 textPos = { 20, 20 }; // Position for displaying cursor coordinates
+
+    // Draw cursor position text
+    DrawText(TextFormat("Mouse Position: (%.0f, %.0f)", worldPos.x, worldPos.y), (int)textPos.x, (int)textPos.y + 30, 20, BLACK);
+    DrawText(TextFormat("Mouse Position: (%.0f, %.0f)", worldPos.x, worldPos.y), (int)textPos.x, (int)textPos.y, 20, WHITE);
+        
+        
+        
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) clickOnTileMapEditor(camera, keyNo);
        
         

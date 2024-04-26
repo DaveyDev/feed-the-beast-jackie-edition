@@ -11,7 +11,8 @@ Texture2D wateredSprout;
 Texture2D smallWeedWateredSprout;
 Texture2D bigWeedWateredSprout;
 Texture2D plantedField;
-Texture2D weedField;
+
+Texture2D deadTexture;
 
 
 Texture2D scaleTexture(Texture2D texture, int newWidth, int newHeight) {
@@ -39,7 +40,7 @@ void loadTextures() {
     smallWeedWateredSprout = scaleTexture(LoadTexture("src/textures/52.png"), 64, 64);
     bigWeedWateredSprout = scaleTexture(LoadTexture("src/textures/53.png"), 64, 64);
     plantedField = scaleTexture(LoadTexture("src/textures/311.png"), 64, 64);
-    weedField = scaleTexture(LoadTexture("src/textures/32.png"), 64, 64);
+    deadTexture = scaleTexture(LoadTexture("src/textures/9.png"), 64, 64);
 }
 
 
@@ -57,6 +58,6 @@ void unloadTextures(){
     UnloadTexture(smallWeedWateredSprout);
     UnloadTexture(bigWeedWateredSprout);
     UnloadTexture(plantedField);
-    UnloadTexture(weedField);
+    UnloadTexture(deadTexture);
  
 }

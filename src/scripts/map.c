@@ -71,10 +71,10 @@ void drawMap(Camera2D camera){
                     DrawTexture(plantedField, block.x, block.y, WHITE);
                     break;
                     case 8: //
-                    DrawTexture(weedField, block.x, block.y, WHITE);
+                    DrawTexture(plantedField, block.x, block.y, WHITE);
                     break;
                     case 9: //
-                    DrawTexture(bigWeedWateredSprout, block.x, block.y, WHITE);
+                    DrawTexture(deadTexture, block.x, block.y, WHITE);
                     break;
                     
                     
