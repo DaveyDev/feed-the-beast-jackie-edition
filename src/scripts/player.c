@@ -67,11 +67,16 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], 
     // Handle player input for horizontal movement
     if (IsKeyDown(KEY_RIGHT)) {
         if(player->hitRight == false){
+            player->walkAnimation.frames[0].width = 32;
+            player->walkAnimation.frames[1].width = 32;
             player->position.x += speedPerSecond;
             if(!player->isJumping) updateAnimation(&player->walkAnimation, deltaTime);
         }
     } else if (IsKeyDown(KEY_LEFT) && player->position.x > camera.target.x - GetScreenWidth()/2 && player->hitLeft == false) {
+        player->walkAnimation.frames[0].width = -32;
+        player->walkAnimation.frames[1].width = -32;
         player->position.x -= speedPerSecond;
+        if(!player->isJumping) updateAnimation(&player->walkAnimation, deltaTime);
 
     }
     
