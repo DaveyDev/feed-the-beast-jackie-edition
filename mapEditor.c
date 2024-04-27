@@ -77,7 +77,7 @@ int main() {
         
         
         
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) clickOnTileMapEditor(camera, keyNo);
+        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) clickOnTileMapEditor(camera, keyNo);
        
         
         

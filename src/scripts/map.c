@@ -34,6 +34,7 @@ void loadMap(const char *filename) {
 void drawMap(Camera2D camera){
     BeginMode2D(camera);
     
+    DrawTexture(coffeeBitch, 7500, 832, WHITE);
 
     for (int row = 0; row < MAX_ROWS; row++) {
             for (int col = 0; col < MAX_COLS; col++) {
@@ -59,19 +60,19 @@ void drawMap(Camera2D camera){
                     DrawTexture(fieldTexture, block.x, block.y, WHITE);
                     break;
                     case 4: //
-                    DrawTexture(wateredFieldTexture, block.x, block.y, WHITE);
+                    //DrawTexture(wateredFieldTexture, block.x, block.y, WHITE);
                     break;
                     case 5: //
-                    DrawTexture(seedFieldTexture, block.x, block.y, WHITE);
+                    //DrawTexture(seedFieldTexture, block.x, block.y, WHITE);
                     break;
                     case 6: //
-                    DrawTexture(wateredSeedFieldTexture, block.x, block.y, WHITE);
+                    DrawTexture(sandTexture, block.x, block.y, WHITE);
                     break;
                     case 7: //
-                    DrawTexture(plantedField, block.x, block.y, WHITE);
+                    DrawTexture(spikes, block.x, block.y, WHITE);
                     break;
                     case 8: //
-                    DrawTexture(plantedField, block.x, block.y, WHITE);
+                    DrawTexture(deadBlock, block.x, block.y, WHITE);
                     break;
                     case 9: //
                     DrawTexture(deadTexture, block.x, block.y, WHITE);
@@ -116,7 +117,7 @@ void clickOnTile(Player *player, Hoe *hoe, WaterCan *waterCan){
             }
             
             }
-}*/
+}
 
 
 void updateMap(CoffeeSeedManager *coffeeSeedManager){
@@ -169,4 +170,4 @@ void updateMap(CoffeeSeedManager *coffeeSeedManager){
     }
 }
     
-    
+    */

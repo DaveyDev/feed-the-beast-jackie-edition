@@ -3,9 +3,12 @@
 
 #include "coffeeSeedManager.h"
 #include "player.h"
+#include "animation.c"
+#include "animation.h"
 #include <stdio.h>  // Include necessary headers as needed
 
-xdScene = 0;
+int tmpPoints = 0;
+int xdScene = 0;
 
 void initPlayer(Player *player, int screenWidth, int screenHeight) {
     // Initialization code for the player
@@ -25,14 +28,36 @@ void initPlayer(Player *player, int screenWidth, int screenHeight) {
     player->hitObstacle = false;
     player->isJumping = false;
     player->points = 0;
-    player->texture = LoadTexture("src/textures/player.png");
+    //player->texture = LoadTexture("src/textures/player.png");
+    player->walkAnimation.texture = LoadTexture("src/textures/player.png");
+    player->walkAnimation.frameCount = 2; // Number of frames in the walk animation
+    player->walkAnimation.currentFrame = 0;
+    player->walkAnimation.frameTime = 0.1f; // Time between frames (adjust as needed)
+    player->walkAnimation.currentTime = 0.0f;
+    
+    
+        // Calculate frames within the texture atlas for walk animation
+    // Modify this based on your texture atlas layout
+    // Assuming each frame is 64x64 pixels
+    player->walkAnimation.frames = (Rectangle*)malloc(player->walkAnimation.frameCount * sizeof(Rectangle));
+    int frameWidth = 32;
+    int frameHeight = 32;
+    for (int i = 0; i < player->walkAnimation.frameCount; i++) {
+        player->walkAnimation.frames[i].x = i * frameWidth;
+        player->walkAnimation.frames[i].y = 0; // Assuming frames are on the first row
+        player->walkAnimation.frames[i].width = frameWidth;
+        player->walkAnimation.frames[i].height = frameHeight;
+    }
 }
 
-void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], Camera2D camera) {
+void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], Camera2D camera, Sound jumpSound, Sound hurtSound, Sound pickupSound) {
     float speedPerSecond = player->speed * deltaTime;
     //const float speedPerSecond = 5.0f;
     checkCollisionLeft(player, map, deltaTime);
     checkCollisionRight(player, map, deltaTime);
+     
+   
+    
     
     if (IsKeyDown('S')){
         speedPerSecond = 1.4 * player->speed * deltaTime;
@@ -43,9 +68,11 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], 
     if (IsKeyDown(KEY_RIGHT)) {
         if(player->hitRight == false){
             player->position.x += speedPerSecond;
+            if(!player->isJumping) updateAnimation(&player->walkAnimation, deltaTime);
         }
     } else if (IsKeyDown(KEY_LEFT) && player->position.x > camera.target.x - GetScreenWidth()/2 && player->hitLeft == false) {
         player->position.x -= speedPerSecond;
+
     }
     
     
@@ -56,6 +83,7 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], 
     //checkPlayerCollisionWithMap(player, map, deltaTime);
     checkCollisionDown(player, map, deltaTime);
     checkCollisionUp(player, map, deltaTime, camera);
+    if(xdScene == 2) PlaySound(hurtSound);
     //checkCollisionWithCoffe();
     
     // Handle player input for jumping
@@ -66,13 +94,17 @@ void updatePlayer(Player *player, float deltaTime, int map[MAX_ROWS][MAX_COLS], 
             player->velocity.y = -JUMP_FORCE;
             player->isJumping = true;
             player-> hitObstacle = false;
+            PlaySound(jumpSound);
         }
     }
     
     
 
     // Apply gravity to the player
-    
+    if(player->points > tmpPoints){
+    PlaySound(pickupSound);
+    tmpPoints = player->points;
+    }
   
     if(!player->hitObstacle){
     player->velocity.y += GRAVITY * deltaTime;
@@ -115,12 +147,21 @@ void checkCollisionUp(Player *player, int map[MAX_ROWS][MAX_COLS], Camera2D came
 
             if (CheckCollisionRecs(player->colliderUp, (Rectangle){ tileX, tileY, 64, 64 })) {
                 
-                if (map[row][col] == 9) {
+                if (map[row][col] == 9 || map[row][col] == 8) {
                     // Change the scene to 2
-                    printf("Transitioning to scene 2 (death screen)\n");
+                    //printf("Transitioning to scene 2 (death screen)\n");
+                    
                     xdScene = 2;
                      
-                } else xdScene = 0;
+                } //else xdScene = 0;
+                
+                if (map[row][col] == 6) {
+                    // Change the scene to 2
+                    //printf("Transitioning to scene 2 (death screen)\n");
+                    
+                    xdScene = 3;
+                     
+                } //else xdScene = 0;
                 
                 if(map[row][col] == 3 && IsKeyDown('A')){
                     map[row][col] = 0;
@@ -132,7 +173,7 @@ void checkCollisionUp(Player *player, int map[MAX_ROWS][MAX_COLS], Camera2D came
                     
                     
                 }
-                 if(map[row][col] != 0){
+                 if(map[row][col] != 0  && map[row][col] != 7){
                     player->isJumping = false;
                     player->hitObstacle = true;
                     player->velocity.y = 0;
@@ -184,7 +225,7 @@ void checkCollisionLeft(Player *player, int map[MAX_ROWS][MAX_COLS]) {
             float tileY = row * 64;
 
             if (CheckCollisionRecs(player->colliderLeft, (Rectangle){ tileX, tileY, 64, 64 })) {
-                if(map[row][col] != 0){
+                if(map[row][col] != 0  && map[row][col] != 7){
                     player->hitLeft = true;
                 } 
             }
@@ -201,7 +242,7 @@ void checkCollisionRight(Player *player, int map[MAX_ROWS][MAX_COLS]) {
             float tileY = row * 64;
 
             if (CheckCollisionRecs(player->colliderRight, (Rectangle){ tileX, tileY, 64, 64 })) {
-                if(map[row][col] != 0){
+                if(map[row][col] != 0 && map[row][col] != 7){
                     player->hitRight = true;
                     
                 }
@@ -213,17 +254,26 @@ void drawPlayer(Player *player, Camera2D camera) {
     BeginMode2D(camera);
     
     // Define source and destination rectangles for scaling
-    Rectangle sourceRect = { 0, 0, player->texture.width, player->texture.height }; // Source rectangle is the entire texture
-    Rectangle destRect = { player->position.x, player->position.y, 64, 64 }; // Destination rectangle is 64x64
+    //Rectangle sourceRect = { 0, 0, player->texture.width, player->texture.height }; // Source rectangle is the entire texture
+    //Rectangle destRect = { player->position.x, player->position.y, 64, 64 }; // Destination rectangle is 64x64
     
     // Draw the texture with scaling using DrawTexturePro
-    DrawTexturePro(player->texture, sourceRect, destRect, (Vector2){ 0, 0 }, 0.0f, WHITE);
+    //DrawTexturePro(player->texture, sourceRect, destRect, (Vector2){ 0, 0 }, 0.0f, WHITE);
+    
+    
+    
+    
+     // Draw the current frame of the walk animation
+    Rectangle sourceRect = player->walkAnimation.frames[player->walkAnimation.currentFrame];
+    Rectangle destRect = { player->position.x, player->position.y, 64, 64 };
+    DrawTexturePro(player->walkAnimation.texture, sourceRect, destRect, (Vector2){ 0, 0 }, 0.0f, WHITE);
+
     
     // Draw player collider
-    DrawRectangleLinesEx(player->colliderUp, 1, RED);
-    DrawRectangleLinesEx(player->colliderDown, 1, GREEN);
-    DrawRectangleLinesEx(player->colliderLeft, 1, BLUE);
-    DrawRectangleLinesEx(player->colliderRight, 1, BLACK);
+    //DrawRectangleLinesEx(player->colliderUp, 1, RED);
+    //DrawRectangleLinesEx(player->colliderDown, 1, GREEN);
+    //DrawRectangleLinesEx(player->colliderLeft, 1, BLUE);
+    //DrawRectangleLinesEx(player->colliderRight, 1, BLACK);
     
     EndMode2D();
 }
@@ -231,6 +281,7 @@ int sceneCheck(){
     if(xdScene == 0) return 1;
     if(xdScene == 1) return 2;
     if(xdScene == 2) return 2;
+    if(xdScene == 3) return 3;
 }
 void resetScene(){
     xdScene = 0;
