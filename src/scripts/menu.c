@@ -17,7 +17,7 @@ char *playBtn = "UwU";
 const int playBtnFontSize = 30;
 
 
-const char *subtitleDeath = "YOU DIE";
+const char *subtitleDeath = "YOU DIED";
 const int subtitleDeathFontSize = 40;
 const char *mainMenuBtn = "Main Menu";
 const int mainMenuBtnFontSize = 30;
